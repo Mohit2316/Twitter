@@ -6,12 +6,15 @@ class UsersEditTest < ActionDispatch::IntegrationTest
     @user = users(:mohit)
   end
 
-  test "successful edit" do
-  	# go to edit page of user
-	get edit_user_path(@user)
+  test "successful edit with friendly forwarding" do
 
-	# check if template exists
-	assert_template 'users/edit'
+  	get edit_user_path(@user)
+    log_in_as(@user)
+    assert_redirected_to edit_user_path(@user)
+  	# go to edit page of user
+
+
+	
 
 	# fill-in the form with valid user credentials + users may not want to update password every time
 	name = "foobar"
@@ -38,6 +41,8 @@ class UsersEditTest < ActionDispatch::IntegrationTest
   end
 
   test "unsuccessful edits" do 
+
+  	log_in_as(@user)
   	get edit_user_path(@user)
   	assert_template 'users/edit'
   	patch user_path(@user), user: { name:  "",
