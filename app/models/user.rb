@@ -1,13 +1,15 @@
 class User < ActiveRecord::Base
 
+  has_many :microposts, dependent: :destroy
   attr_accessor :remember_token, :activation_token, :reset_token
 	before_save   :downcase_email
   before_create :create_activation_digest
 	validates :name, presence: true, length: {maximum: 50}
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  	validates :email, presence: true, length: { maximum: 109 },
+  validates :email, presence: true, length: { maximum: 109 },
                     format: { with: VALID_EMAIL_REGEX },
                      uniqueness: {case_sensitive: false}
+
 
   has_secure_password
   validates :password, length: { minimum: 6 }, allow_blank: true
@@ -65,6 +67,12 @@ end
   # Returns true if a password reset has expired.
   def password_reset_expired?
     reset_sent_at < 2.hours.ago
+  end
+
+  # Defines a proto-feed.
+  # See "Following users" for the full implementation.
+  def feed
+    Micropost.where("user_id = ?", id)
   end
   
   private
