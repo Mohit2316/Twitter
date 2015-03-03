@@ -1,0 +1,15 @@
+one:
+  follower: mohit
+  followed: lana
+
+two:
+  follower: mohit
+  followed: mallory
+
+three:
+  follower: lana
+  followed: mohit
+
+four:
+  follower: archer
+  followed: mohit
